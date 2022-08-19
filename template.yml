@@ -11,7 +11,7 @@ Resources:
       KeyName: KhalilAWS
       # Change this, as applicable to you
       # You may need to find out what instance types are available in your region - use https://cloud-images.ubuntu.com/locator/ec2/
-      ImageId: 'ami-083654bd07b5da81d' 
+      ImageId: 'ami-085284d24fe829cd0' 
       InstanceType: t3.micro
   InstanceSecurityGroup:
     Type: 'AWS::EC2::SecurityGroup'
