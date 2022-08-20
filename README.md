@@ -132,4 +132,4 @@ Files relevant for this exercise are:
     └── config.yml
 ```
 
-All good test
+All good test after adding the ssh key
