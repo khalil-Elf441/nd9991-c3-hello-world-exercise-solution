@@ -3,3 +3,4 @@
 
 [all]
 ec2-54-219-176-155.us-west-1.compute.amazonaws.com
+ec2-3-101-12-174.us-west-1.compute.amazonaws.com
