@@ -1,34 +1,53 @@
 ---
-- name: "update apt packages."
-  become: yes
-  apt:
-    update_cache: yes
+- name: install node curl
+  shell: |
+    curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.34.0/install.sh | bash
+    
 
-- name: "upgrade packages"
-  become: yes
-  apt:
-    upgrade: yes
+- name: install node and config paths
+  shell: |
+    export NVM_DIR="$HOME/.nvm"
+    [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"
+    nvm install node
+    ln -s "$(which node)" "/usr/local/bin/node"
+    ln -s "$(which npm)" "/usr/local/bin/npm"
 
+#    sudo ln -s "$(which node)" "/usr/local/bin/node"
+#    sudo ln -s "$(which npm)" "/usr/local/bin/npm"
 
-- name: remove dependencies that are no longer required
-  become: yes
-  apt:
-    autoremove: yes
-
-- name: "install dependencies."
-  become: yes
-  apt:
-    name: ["nodejs", "npm"]
-    state: latest
-    update_cache: yes
+# Verify node and npm install
+- name: check Node and npm installed version
+  shell: |
+    node --version && npm --version
+  register: command_output
+- debug: var=command_output.stdout_lines
+  
 
 - name: "install pm2"
-  become: yes
+  become: true
   npm:
     name: pm2
     global: yes
     production: yes
     state: present
+
+
+- name: "configure pm2 path"
+  become: yes
+  shell: | 
+    npm install pm2 -g
+    export PATH=$PATH:$(npm config get prefix)/bin
+
+
+- name: check pm2 installation
+  become: yes
+  shell: |
+    export PATH=$PATH:$(npm config get prefix)/bin
+    /root/.nvm/versions/node/v18.7.0/bin/pm2 status
+  register: command_output_npm
+- debug: var=command_output_npm.stdout_lines
+#    sudo ln -s "$(which pm2)" /usr/bin/pm2
+
 
 - name: Creates directory
   file:
@@ -41,5 +60,7 @@
     dest: "~/web/index.js"
 
 - name: Executing node
+  become: yes
   shell: |
-    pm2 start ~/web/index.js -f
+    /root/.nvm/versions/node/v18.7.0/bin/pm2 start ~/web/index.js -f
+  
