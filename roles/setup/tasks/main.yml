@@ -17,11 +17,11 @@
 
 
 # Verify node and npm install
-- name: check Node and npm installed version
-  shell: |
-    node --version && npm --version
-  register: command_output
-- debug: var=command_output.stdout_lines
+# - name: check Node and npm installed version
+#  shell: |
+#    node --version && npm --version
+#  register: command_output
+# - debug: var=command_output.stdout_lines
   
 
 - name: "install pm2"
