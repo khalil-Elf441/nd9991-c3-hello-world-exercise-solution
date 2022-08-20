@@ -132,4 +132,3 @@ Files relevant for this exercise are:
     └── config.yml
 ```
 
-All good test
