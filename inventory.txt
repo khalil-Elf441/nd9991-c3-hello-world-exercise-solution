@@ -2,4 +2,4 @@
 35.170.198.76
 
 [all]
-35.170.198.76
+ec2-54-219-176-155.us-west-1.compute.amazonaws.com
