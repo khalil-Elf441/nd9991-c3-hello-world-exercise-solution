@@ -9,11 +9,12 @@
     export NVM_DIR="$HOME/.nvm"
     [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"
     nvm install node
-    ln -s "$(which node)" "/usr/local/bin/node"
-    ln -s "$(which npm)" "/usr/local/bin/npm"
+    sudo ln -s "$(which node)" "/usr/local/bin/node"
+    sudo ln -s "$(which npm)" "/usr/local/bin/npm"
 
-#    sudo ln -s "$(which node)" "/usr/local/bin/node"
-#    sudo ln -s "$(which npm)" "/usr/local/bin/npm"
+#    ln -s "$(which node)" "/usr/local/bin/node"
+#    ln -s "$(which npm)" "/usr/local/bin/npm"
+
 
 # Verify node and npm install
 - name: check Node and npm installed version
