@@ -1,34 +1,41 @@
 ---
-- name: "update apt packages."
-  become: yes
-  apt:
-    update_cache: yes
+- name: install node curl
+  shell: |
+    curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.34.0/install.sh | bash
+    
 
-- name: "upgrade packages"
+- name: install node and config paths
+  shell: |
+    export NVM_DIR="$HOME/.nvm"
+    [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"
+    nvm install 16
+    sudo ln -s "$(which node)" "/usr/local/bin/node"
+    sudo ln -s "$(which npm)" "/usr/local/bin/npm"
+
+# Verify node and npm install
+- name: check Node and npm installed version
+  shell: |
+    node --version && npm --version
+  register: command_output
+- debug: var=command_output.stdout_lines
+  
+
+- name: "install and configure pm2 path"
   become: yes
-  apt:
-    upgrade: yes
+  shell: | 
+    npm install pm2 -g
+    export PATH=$PATH:$(npm config get prefix)/bin
 
 
-- name: remove dependencies that are no longer required
+- name: check pm2 installation
   become: yes
-  apt:
-    autoremove: yes
+  shell: |
+    export PATH=$PATH:$(npm config get prefix)/bin
+    pm2 status
+  register: command_output_npm
+- debug: var=command_output_npm.stdout_lines
+#    sudo ln -s "$(which pm2)" /usr/bin/pm2
 
-- name: "install dependencies."
-  become: yes
-  apt:
-    name: ["nodejs", "npm"]
-    state: latest
-    update_cache: yes
-
-- name: "install pm2"
-  become: yes
-  npm:
-    name: pm2
-    global: yes
-    production: yes
-    state: present
 
 - name: Creates directory
   file:
@@ -41,5 +48,52 @@
     dest: "~/web/index.js"
 
 - name: Executing node
+  become: yes
   shell: |
     pm2 start ~/web/index.js -f
+  
+
+# - name: "update apt packages."
+#   become: yes
+#   apt:
+#     update_cache: yes
+
+# - name: "upgrade packages"
+#   become: yes
+#   apt:
+#     upgrade: yes
+
+
+# - name: remove dependencies that are no longer required
+#   become: yes
+#   apt:
+#     autoremove: yes
+
+# - name: "install dependencies."
+#   become: yes
+#   apt:
+#     name: ["nodejs", "npm"]
+#     state: latest
+#     update_cache: yes
+
+# - name: "install pm2"
+#   become: yes
+#   npm:
+#     name: pm2
+#     global: yes
+#     production: yes
+#     state: present
+
+# - name: Creates directory
+#   file:
+#     path: ~/web
+#     state: directory
+
+# - name: Copy index test page
+#   template:
+#     src: "files/index.js"
+#     dest: "~/web/index.js"
+
+# - name: Executing node
+#   shell: |
+#     pm2 start ~/web/index.js -f
