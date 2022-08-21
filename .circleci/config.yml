@@ -33,7 +33,8 @@ jobs:
         - run:
             name: describe Cloudformation Stack
             command: |
-              echo $(aws cloudformation --region us-west-1 describe-stack-resources --stack-name myStack-${CIRCLE_WORKFLOW_ID:0:5} --logical-resource-id EC2Instance | jq '.StackResources .PhysicalResourceId' | xargs aws ec2 describe-instances --instance-ids)
+              echo $(aws cloudformation --region us-west-1 describe-stack-resources --stack-name myStack-${CIRCLE_WORKFLOW_ID:0:5} --logical-resource-id EC2Instance)
+#              | jq '.StackResources .PhysicalResourceId' | xargs aws ec2 describe-instances --instance-ids | | jq '.Reservations[0] .Instances[0].NetworkInterfaces[0].PublicIpAddresses.PublicDnsName'
 
 # Sequential workflow
 workflows:
