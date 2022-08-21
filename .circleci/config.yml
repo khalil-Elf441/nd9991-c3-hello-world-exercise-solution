@@ -29,10 +29,11 @@ jobs:
       docker:
         - image: amazon/aws-cli
       steps:
+        - checkout
         - run:
             name: describe Cloudformation Stack
             command: |
-              echo $(aws cloudformation describe-stacks myStack-${CIRCLE_WORKFLOW_ID:0:5} --region us-west-1)
+              echo $(aws cloudformation describe-stacks --stack-name myStack-${CIRCLE_WORKFLOW_ID:0:5} --region us-west-1)
 
 # Sequential workflow
 workflows:
