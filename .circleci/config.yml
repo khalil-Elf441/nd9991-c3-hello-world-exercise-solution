@@ -7,24 +7,22 @@ orbs:
 # Define the jobs we want to run for this project
 jobs:
   # Exercise: Config and Deployment
-  configure_infrastructure: 
+  smoke_test: 
     docker:
-      - image: python:3.7-alpine3.11
+      - image: alpine:latest
     steps:
-      - checkout
-      - add_ssh_keys:
-              # You can get this ID in the section where you registered the SSH Key
-              fingerprints: ["51:a4:3f:75:1c:5b:f9:85:b0:4d:9c:fa:5b:78:39:9d"] 
+      - run: apk add --update curl
       - run:
-          name: Install Ansible
+          name: smoke test
           command: |
-            # Install Ansible
-            apk add --update ansible
-      - run:
-          name: Run Playbook and Configure server
-          command: |
-            # Your command
-            ansible-playbook -i inventory.txt main4.yml
+            URL="https://blog.udacity.com/"
+            # Test if website exists
+            if curl -s --head ${URL} 
+            then
+              return 0
+            else
+              return 1
+            fi
   # create_infrastructure: 
   #     docker:
   #       - image: amazon/aws-cli
@@ -42,5 +40,5 @@ workflows:
   # Name the workflow
   myWorkflow:
     jobs:
-      - configure_infrastructure
+      - smoke_test
       # - myjob2
