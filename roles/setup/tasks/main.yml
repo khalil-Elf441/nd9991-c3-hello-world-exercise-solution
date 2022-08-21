@@ -50,6 +50,7 @@
 - name: Executing node
   become: yes
   shell: |
+    export PATH=$PATH:$(npm config get prefix)/bin
     pm2 start ~/web/index.js -f
   
 
